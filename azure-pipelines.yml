@@ -12,4 +12,6 @@ jobs:
         rm -rf "$HOMEBREW_TAP_DIR"
         ln -s "$PWD" "$HOMEBREW_TAP_DIR"
         brew test-bot
+        brew cask install trader-workstation-latest
+        brew cask uninstall trader-workstation-latest
       displayName: Run brew test-bot
