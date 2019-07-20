@@ -1,13 +1,22 @@
-language: c
-os: osx
-compiler: clang
-osx_image: xcode11
-cache:
-  directories:
-    - /usr/local/Homebrew/Library/Homebrew/vendor/bundle
+language: ruby
+
+sudo: true
+
+matrix:
+  include:
+    - os: osx
+      osx_image: xcode10
+      rvm: system
+  fast_finish: true
+
 branches:
   only:
     - master
+
+cache:
+  directories:
+    - /usr/local/Homebrew/Library/Homebrew/vendor/bundle
+    - /usr/local/Homebrew/Library/Homebrew/vendor/portable-ruby
 
 before_install:
   - sudo chown -R "$USER" "$(brew --repo)"
@@ -19,3 +28,5 @@ before_install:
 
 script:
   - brew test-bot
+  - brew cask install trader-workstation-latest
+  - brew cask uninstall trader-workstation-latest
