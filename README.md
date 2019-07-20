@@ -8,12 +8,6 @@
 
 Or `brew tap fasmat/trader-workstation` and then `brew install trader-workstation-latest`.
 
-Or install via URL (which will not receive updates):
-
-```bash
-brew install https://raw.githubusercontent.com/fasmat/homebrew-unison/master/Formula/<formula>.rb
-```
-
 ## Documentation
 
 `brew help`, `man brew` or check [Homebrew's documentation](https://docs.brew.sh).
