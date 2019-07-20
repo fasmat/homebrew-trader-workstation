@@ -4,9 +4,9 @@
 
 ## How do I install this formula
 
-`brew install fasmat/trader-workstation/trader-workstation-latest`
+`brew cask install fasmat/trader-workstation/trader-workstation-latest`
 
-Or `brew tap fasmat/trader-workstation` and then `brew install trader-workstation-latest`.
+Or `brew tap fasmat/trader-workstation` and then `brew cask install trader-workstation-latest`.
 
 ## Documentation
 
