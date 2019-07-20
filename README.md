@@ -1,6 +1,6 @@
 # Homebrew tap for the latest version of Trader Workstation
 
-[![Build Status](https://travis-ci.com/fasmat/homebrew-trader-workstation.svg?branch=master)](https://travis-ci.com/fasmat/homebrew-trader-workstation)
+[![Build Status](https://fasmat.visualstudio.com/homebrew-trader-workstation/_apis/build/status/fasmat.homebrew-trader-workstation?branchName=master)](https://fasmat.visualstudio.com/homebrew-trader-workstation/_build/latest?definitionId=1&branchName=master)
 
 ## How do I install this formula
 
