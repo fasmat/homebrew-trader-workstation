@@ -4,8 +4,12 @@ jobs:
     vmImage: macOS-10.14
   steps:
     - bash: |
+        # Force strict error checking.
         set -e
-        sudo xcode-select --switch /Applications/Xcode_10.2.app/Contents/Developer
+        set -o errexit
+        set -o pipefail
+
+        sudo xcode-select --switch /Applications/Xcode_10.3.app/Contents/Developer
         brew update
         HOMEBREW_TAP_DIR="/usr/local/Homebrew/Library/Taps/fasmat/homebrew-trader-workstation"
         mkdir -p "$HOMEBREW_TAP_DIR"
@@ -14,4 +18,4 @@ jobs:
         brew test-bot
         brew cask install trader-workstation-latest
         brew cask uninstall trader-workstation-latest
-      displayName: Run brew test-bot
+      displayName: Install and uninstall trader-workstation-latest
