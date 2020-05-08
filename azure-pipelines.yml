@@ -1,7 +1,7 @@
 jobs:
 - job: macOS
   pool:
-    vmImage: macOS-10.14
+    vmImage: macOS-10.15
   steps:
     - bash: |
         # Force strict error checking.
@@ -9,7 +9,7 @@ jobs:
         set -o errexit
         set -o pipefail
 
-        sudo xcode-select --switch /Applications/Xcode_11.3.app/Contents/Developer
+        sudo xcode-select --switch /Applications/Xcode_11.4.1.app/Contents/Developer
         brew update
         HOMEBREW_TAP_DIR="/usr/local/Homebrew/Library/Taps/fasmat/homebrew-trader-workstation"
         mkdir -p "$HOMEBREW_TAP_DIR"
