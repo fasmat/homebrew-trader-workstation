@@ -1,5 +1,5 @@
 cask 'trader-workstation-latest' do
-  version '979.4s'
+  version '978.1u'
   sha256 '28debf81e1c4afeb5e918eb7c6c4c13e46aa044c150c4cffccc25ad71e11e37c'
 
   url 'https://download2.interactivebrokers.com/installers/tws/latest-standalone/tws-latest-standalone-macosx-x64.dmg'
@@ -9,13 +9,13 @@ cask 'trader-workstation-latest' do
   conflicts_with cask: 'trader-workstation'
 
   installer script: {
-                      executable: "#{staged_path}/Trader Workstation Installer.app/Contents/MacOS/JavaApplicationStub",
+                      executable: "#{staged_path}/Trader Workstation #{version.major} Installer.app/Contents/MacOS/JavaApplicationStub",
                       args:       ['-q'],
                     }
 
   uninstall quit:   'com.install4j.5889-6375-8446-2021.22',
             script: {
-                      executable: "#{ENV['HOME']}/Applications/Trader Workstation/Trader Workstation Uninstaller.app/Contents/MacOS/JavaApplicationStub",
+                      executable: "#{ENV['HOME']}/Applications/Trader Workstation #{version.major}/Trader Workstation #{version.major} Uninstaller.app/Contents/MacOS/JavaApplicationStub",
                       args:       ['-q'],
                     }
 end
