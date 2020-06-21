@@ -1,21 +1,42 @@
-jobs:
-- job: macOS
-  pool:
-    vmImage: macOS-10.15
-  steps:
-    - bash: |
-        # Force strict error checking.
-        set -e
-        set -o errexit
-        set -o pipefail
+# We only want to test on PRs
+trigger: none
 
-        sudo xcode-select --switch /Applications/Xcode_11.4.1.app/Contents/Developer
-        brew update
-        HOMEBREW_TAP_DIR="/usr/local/Homebrew/Library/Taps/fasmat/homebrew-trader-workstation"
-        mkdir -p "$HOMEBREW_TAP_DIR"
-        rm -rf "$HOMEBREW_TAP_DIR"
-        ln -s "$PWD" "$HOMEBREW_TAP_DIR"
-        brew test-bot
-        brew cask install trader-workstation-latest
-        brew cask uninstall trader-workstation-latest
-      displayName: Install and uninstall trader-workstation-latest
+variables:
+  ci: True
+  xcodeApp: /Applications/Xcode_11.5.app
+
+pool:
+  vmImage: 'macOS-10.15'
+
+jobs:
+- job: Casks_CI
+  steps:
+  - script: sudo xcode-select -s $(xcodeApp)/Contents/Developer
+    displayName: xcode-select
+  - script: |
+      brew update-reset "$(brew --repository)"
+      brew tap fasmat/trader-workstation
+      brew update-reset "$(brew --repository homebrew/cask)"
+      brew update-reset "$(brew --repository fasmat/trader-workstation)"
+      brew pull --clean "https://github.com/fasmat/homebrew-trader-workstation/pull/$(System.PullRequest.PullRequestNumber)"
+    displayName: brew pull
+  - script: |
+      cd "$(brew --repository fasmat/trader-workstation)"
+      brew cask ci
+    displayName: brew cask ci
+        
+- job: Formula_CI
+  steps:
+  - script: sudo xcode-select -s $(xcodeApp)/Contents/Developer
+    displayName: xcode-select
+  - script: |
+      brew update-reset "$(brew --repository)"
+      HOMEBREW_TAP_DIR="/usr/local/Homebrew/Library/Taps/fasmat/homebrew-trader-workstation"
+      mkdir -p "$HOMEBREW_TAP_DIR"
+      rm -rf "$HOMEBREW_TAP_DIR"
+      ln -s "$PWD" "$HOMEBREW_TAP_DIR"
+    displayName: setup tap
+  - script: |
+      brew cask install trader-workstation-latest
+      brew cask uninstall trader-workstation-latest
+    displayName: brew install and uninstall trader-workstation
