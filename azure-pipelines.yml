@@ -1,6 +1,9 @@
-# Only trigger on PRs and merges to master
+# Only run for PRs and master
 trigger:
-  - master
+- master
+
+pr:
+- master
 
 variables:
   xcodeApp: /Applications/Xcode_11.5.app
@@ -10,22 +13,6 @@ pool:
   vmImage: 'macOS-10.15'
 
 jobs:
-- job: Casks_CI
-  steps:
-  - script: sudo xcode-select -s $(xcodeApp)/Contents/Developer
-    displayName: xcode-select
-  - script: |
-      brew update-reset "$(brew --repository)"
-      brew tap $(repoName)
-      brew update-reset "$(brew --repository homebrew/cask)"
-      brew update-reset "$(brew --repository $(repoName))"
-      brew pull --clean "https://github.com/$(repoName)/pull/$(System.PullRequest.PullRequestNumber)"
-    displayName: brew pull
-  - script: |
-      cd "$(brew --repository $(repoName))"
-      brew cask ci
-    displayName: brew cask ci
-        
 - job: Formula_CI
   steps:
   - script: sudo xcode-select -s $(xcodeApp)/Contents/Developer
