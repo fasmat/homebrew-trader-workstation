@@ -1,3 +1,7 @@
+# Only trigger on PRs and merges to master
+trigger:
+  - master
+
 variables:
   xcodeApp: /Applications/Xcode_11.5.app
   repoName: fasmat/homebrew-trader-workstation
