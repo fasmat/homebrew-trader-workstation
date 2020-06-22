@@ -1,9 +1,10 @@
-# We only want to test on PRs
-trigger: none
+# Only trigger on PRs and merges to master
+trigger:
+  - master
 
 variables:
-  ci: True
   xcodeApp: /Applications/Xcode_11.5.app
+  repoName: fasmat/homebrew-trader-workstation
 
 pool:
   vmImage: 'macOS-10.15'
@@ -15,13 +16,13 @@ jobs:
     displayName: xcode-select
   - script: |
       brew update-reset "$(brew --repository)"
-      brew tap fasmat/trader-workstation
+      brew tap $(repoName)
       brew update-reset "$(brew --repository homebrew/cask)"
-      brew update-reset "$(brew --repository fasmat/trader-workstation)"
-      brew pull --clean "https://github.com/fasmat/homebrew-trader-workstation/pull/$(System.PullRequest.PullRequestNumber)"
+      brew update-reset "$(brew --repository $(repoName))"
+      brew pull --clean "https://github.com/$(repoName)/pull/$(System.PullRequest.PullRequestNumber)"
     displayName: brew pull
   - script: |
-      cd "$(brew --repository fasmat/trader-workstation)"
+      cd "$(brew --repository $(repoName))"
       brew cask ci
     displayName: brew cask ci
         
@@ -31,7 +32,7 @@ jobs:
     displayName: xcode-select
   - script: |
       brew update-reset "$(brew --repository)"
-      HOMEBREW_TAP_DIR="/usr/local/Homebrew/Library/Taps/fasmat/homebrew-trader-workstation"
+      HOMEBREW_TAP_DIR="/usr/local/Homebrew/Library/Taps/$(repoName)"
       mkdir -p "$HOMEBREW_TAP_DIR"
       rm -rf "$HOMEBREW_TAP_DIR"
       ln -s "$PWD" "$HOMEBREW_TAP_DIR"
