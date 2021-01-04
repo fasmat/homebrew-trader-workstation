@@ -1,9 +1,9 @@
 # Only run for PRs and master
 trigger:
-- master
+- main
 
 pr:
-- master
+- main
 
 variables:
   xcodeApp: /Applications/Xcode_11.5.app
@@ -25,10 +25,14 @@ jobs:
       ln -s "$PWD" "$HOMEBREW_TAP_DIR"
     displayName: setup tap
   - script: |
-      brew cask install trader-workstation-latest
-      brew cask uninstall trader-workstation-latest
-    displayName: brew install and uninstall trader-workstation
+      brew install --cask trader-workstation-latest
+      brew uninstall --cask trader-workstation-latest
+    displayName: brew install and uninstall trader-workstation latest
   - script: |
-      brew cask install trader-workstation
-      brew cask uninstall trader-workstation
+      brew install --cask trader-workstation-beta
+      brew uninstall --cask trader-workstation-beta
+    displayName: brew install and uninstall trader-workstation beta
+  - script: |
+      brew install --cask trader-workstation
+      brew uninstall --cask trader-workstation
     displayName: brew install and uninstall trader-workstation

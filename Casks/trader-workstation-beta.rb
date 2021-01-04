@@ -15,13 +15,13 @@ cask "trader-workstation-beta" do
                  cask: "trader-workstation-latest"
 
   installer script: {
-    executable: "#{staged_path}/Trader Workstation #{version.major} Installer.app/Contents/MacOS/JavaApplicationStub",
+    executable: "#{staged_path}/Trader Workstation Installer.app/Contents/MacOS/JavaApplicationStub",
     args:       ["-q"],
   }
 
   uninstall quit:   "com.install4j.5889-6375-8446-2021.22",
             script: {
-              executable: "#{appdir}/Trader Workstation #{version.major}/Trader Workstation #{version.major} Uninstaller.app/Contents/MacOS/JavaApplicationStub",
+              executable: "#{appdir}/Trader Workstation/Trader Workstation Uninstaller.app/Contents/MacOS/JavaApplicationStub",
               args:       ["-q"],
             }
 end
