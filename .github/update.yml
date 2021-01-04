@@ -1,0 +1,29 @@
+name: Auto-update casks on new releases
+
+on:
+  schedule:
+    - cron: '25 * * * *'
+
+jobs:
+  scheduled:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out this repo
+      uses: actions/checkout@v2
+    - name: Fetch latest versions
+      run: |-
+        MILLISECONDS=$(date '+%s')$(($RANDOM % 1000))
+        curl "https://download2.interactivebrokers.com/installers/tws/latest-standalone/version.json?_=$MILLISECONDS&callback=twslatest_callback" | jq -R 'capture("\\((?<x>.*)\\)[^)]*$").x | fromjson | .buildVersion' > latest
+    - name: Update Casks
+      run: |-
+        sed -i "s/version \".*\"/version $(cat latest)/g" Casks/trader-workstation-latest.rb
+        rm latest
+
+        if [[ `git status --porcelain` ]]; then
+          git config user.name "Auto Updater"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          timestamp=$(date -u)
+          git commit -m "Auto-update TWS Casks: ${timestamp}" || exit 0
+          git push
+        fi

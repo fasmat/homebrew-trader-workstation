@@ -3,7 +3,7 @@
 
 cask "trader-workstation-latest" do
   version "981.2h"
-  sha256 "dba1705e9358d63b37c61c8a36f40ec4aca0cbc0cc54f59ff8bbb3d165c1920e"
+  sha256 :no_check
 
   url "https://download2.interactivebrokers.com/installers/tws/latest-standalone/tws-latest-standalone-macosx-x64.dmg"
   name "Trader Workstation"
