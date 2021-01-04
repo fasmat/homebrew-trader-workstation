@@ -1,16 +1,16 @@
 # typed: false
 # frozen_string_literal: true
 
-cask "trader-workstation-latest" do
-  version "981.2h"
+cask "trader-workstation" do
+  version "978.2j"
   sha256 :no_check
 
-  url "https://download2.interactivebrokers.com/installers/tws/latest-standalone/tws-latest-standalone-macosx-x64.dmg"
-  name "Trader Workstation Latest"
-  desc "Latest Standalone Trader Workstation"
+  url "https://download2.interactivebrokers.com/installers/tws/stable-standalone/tws-stable-standalone-macosx-x64.dmg"
+  name "Trader Workstation"
+  desc "Stable Standalone Trader Workstation"
   homepage "https://www.interactivebrokers.com/"
 
-  conflicts_with cask: "trader-workstation",
+  conflicts_with cask: "trader-workstation-latest",
                  cask: "trader-workstation-beta"
 
   installer script: {
