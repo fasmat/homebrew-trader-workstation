@@ -14,6 +14,10 @@ cask "trader-workstation-beta" do
   conflicts_with cask: "trader-workstation",
                  cask: "trader-workstation-latest"
 
+  caveats do
+    depends_on_java "7+"
+  end
+
   installer script: {
     executable: "#{staged_path}/Trader Workstation Installer.app/Contents/MacOS/JavaApplicationStub",
     args:       ["-q"],
