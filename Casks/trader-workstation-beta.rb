@@ -11,12 +11,7 @@ cask "trader-workstation-beta" do
   homepage "https://www.interactivebrokers.com/"
 
   auto_updates true
-  conflicts_with cask: "trader-workstation",
-                 cask: "trader-workstation-latest"
-
-  caveats do
-    depends_on_java "7+"
-  end
+  conflicts_with cask: ["trader-workstation", "trader-workstation-latest"]
 
   installer script: {
     executable: "#{staged_path}/Trader Workstation Installer.app/Contents/MacOS/JavaApplicationStub",
@@ -28,4 +23,8 @@ cask "trader-workstation-beta" do
               executable: "#{appdir}/Trader Workstation/Trader Workstation Uninstaller.app/Contents/MacOS/JavaApplicationStub",
               args:       ["-q"],
             }
+
+  caveats do
+    depends_on_java "7+"
+  end
 end
