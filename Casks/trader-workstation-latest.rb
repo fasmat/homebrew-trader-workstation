@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 cask "trader-workstation-latest" do
-  version "983.2j"
+  version "983.2l"
   sha256 :no_check
 
   url "https://download2.interactivebrokers.com/installers/tws/latest-standalone/tws-latest-standalone-macosx-x64.dmg"
