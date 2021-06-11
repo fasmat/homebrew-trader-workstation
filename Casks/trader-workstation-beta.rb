@@ -18,6 +18,11 @@ cask "trader-workstation-beta" do
     args:       ["-q"],
   }
 
+  livecheck do
+    url 'https://download2.interactivebrokers.com/installers/tws/beta/version.json'
+    regex(/"buildVersion"\s*:\s*"(\d+(?:\.\d+)+[a-z]*)"/i)
+  end
+
   uninstall quit:   "com.install4j.5889-6375-8446-2021.22",
             script: {
               executable: "#{appdir}/Trader Workstation/Trader Workstation Uninstaller.app/Contents/MacOS/JavaApplicationStub",

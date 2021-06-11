@@ -1,29 +1,34 @@
 # typed: false
 # frozen_string_literal: true
 
-cask "trader-workstation-latest" do
-  version "985.1a"
+cask 'trader-workstation-latest' do
+  version '985.1a'
   sha256 :no_check
 
-  url "https://download2.interactivebrokers.com/installers/tws/latest-standalone/tws-latest-standalone-macosx-x64.dmg"
-  name "Trader Workstation Latest"
-  desc "Latest Standalone Trader Workstation"
-  homepage "https://www.interactivebrokers.com/"
+  url 'https://download2.interactivebrokers.com/installers/tws/latest-standalone/tws-latest-standalone-macosx-x64.dmg'
+  name 'Trader Workstation Latest'
+  desc 'Latest Standalone Trader Workstation'
+  homepage 'https://www.interactivebrokers.com/'
 
-  conflicts_with cask: ["trader-workstation", "trader-workstation-stable", "trader-workstation-beta"]
+  conflicts_with cask: %w[trader-workstation trader-workstation-stable trader-workstation-beta]
 
   installer script: {
     executable: "#{staged_path}/Trader Workstation #{version.major} Installer.app/Contents/MacOS/JavaApplicationStub",
-    args:       ["-q"],
+    args: ['-q']
   }
 
-  uninstall quit:   "com.install4j.5889-6375-8446-2021.22",
+  livecheck do
+    url 'https://download2.interactivebrokers.com/installers/tws/latest-standalone/version.json'
+    regex(/"buildVersion"\s*:\s*"(\d+(?:\.\d+)+[a-z]*)"/i)
+  end
+
+  uninstall quit: 'com.install4j.5889-6375-8446-2021.22',
             script: {
               executable: "#{appdir}/Trader Workstation #{version.major}/Trader Workstation #{version.major} Uninstaller.app/Contents/MacOS/JavaApplicationStub",
-              args:       ["-q"],
+              args: ['-q']
             }
 
   caveats do
-    depends_on_java "7+"
+    depends_on_java '7+'
   end
 end
