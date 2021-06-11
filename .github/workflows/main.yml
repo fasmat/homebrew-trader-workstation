@@ -6,9 +6,6 @@ on:
       - main
   pull_request:
 
-env:
-  REPO_NAME: fasmat/homebrew-trader-workstation
-
 jobs:
   ci-test:
     runs-on: ${{ matrix.os }}
@@ -24,7 +21,7 @@ jobs:
       - name: Setup trader workstation tap
         run: |
           brew update-reset "$(brew --repository)"
-          HOMEBREW_TAP_DIR="/usr/local/Homebrew/Library/Taps/$(REPO_NAME)"
+          HOMEBREW_TAP_DIR="/usr/local/Homebrew/Library/Taps/${{ github.repository }}"
           mkdir -p "$HOMEBREW_TAP_DIR"
           rm -rf "$HOMEBREW_TAP_DIR"
           ln -s "$PWD" "$HOMEBREW_TAP_DIR"
