@@ -10,7 +10,12 @@ cask "trader-workstation-latest" do
   desc "Latest Standalone Trader Workstation"
   homepage "https://www.interactivebrokers.com/"
 
-  conflicts_with cask: ["trader-workstation", "trader-workstation-stable", "trader-workstation-beta"]
+  livecheck do
+    url "https://download2.interactivebrokers.com/installers/tws/latest-standalone/version.json"
+    regex(/"buildVersion"\s*:\s*"(\d+(?:\.\d+)+[a-z]*)"/i)
+  end
+
+  conflicts_with cask: %w[trader-workstation trader-workstation-stable trader-workstation-beta]
 
   installer script: {
     executable: "#{staged_path}/Trader Workstation #{version.major} Installer.app/Contents/MacOS/JavaApplicationStub",
@@ -22,8 +27,4 @@ cask "trader-workstation-latest" do
               executable: "#{appdir}/Trader Workstation #{version.major}/Trader Workstation #{version.major} Uninstaller.app/Contents/MacOS/JavaApplicationStub",
               args:       ["-q"],
             }
-
-  caveats do
-    depends_on_java "7+"
-  end
 end
