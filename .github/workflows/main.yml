@@ -1,0 +1,27 @@
+name: GitHub Actions CI
+
+on:
+  push:
+    branches: main
+  pull_request:
+
+env:
+  HOMEBREW_DEVELOPER: 1
+  HOMEBREW_NO_AUTO_UPDATE: 1
+
+jobs:
+  tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-10.15, macos-11]
+
+    steps:
+    - name: Set up Homebrew
+      uses: Homebrew/actions/setup-homebrew@master
+    - name: Trader workstation (stable)
+      run: brew test-bot --skip-recursive-dependents Casks/trader-workstation.rb
+    - name: Trader workstation (latest)
+      run: brew test-bot --skip-recursive-dependents Casks/trader-workstation-latest.rb
+    - name: Trader workstation (beta)
+      run: brew test-bot --skip-recursive-dependents Casks/trader-workstation-beta.rb
