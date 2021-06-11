@@ -11,7 +11,7 @@ cask "trader-workstation-beta" do
   homepage "https://www.interactivebrokers.com/"
 
   auto_updates true
-  conflicts_with cask: ["trader-workstation", "trader-workstation-latest"]
+  conflicts_with cask: ["trader-workstation", "trader-workstation-stable", "trader-workstation-latest"]
 
   installer script: {
     executable: "#{staged_path}/Trader Workstation Installer.app/Contents/MacOS/JavaApplicationStub",

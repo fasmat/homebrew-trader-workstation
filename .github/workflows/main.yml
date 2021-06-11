@@ -20,8 +20,8 @@ jobs:
 
       - name: Trader workstation (stable)
         run: |
-          brew install --cask trader-workstation
-          brew uninstall --cask trader-workstation
+          brew install --cask trader-workstation-stable
+          brew uninstall --cask trader-workstation-stable
 
       - name: Trader workstation (latest)
         run: |
