@@ -1,7 +1,7 @@
 # typed: false
 # frozen_string_literal: true
 
-cask "trader-workstation" do
+cask "trader-workstation-stable" do
   version "981.3b"
   sha256 :no_check
 
@@ -10,7 +10,7 @@ cask "trader-workstation" do
   desc "Stable Standalone Trader Workstation"
   homepage "https://www.interactivebrokers.com/"
 
-  conflicts_with cask: ["trader-workstation-latest", "trader-workstation-beta"]
+  conflicts_with cask: ["trader-workstation", "trader-workstation-latest", "trader-workstation-beta"]
 
   installer script: {
     executable: "#{staged_path}/Trader Workstation #{version.major} Installer.app/Contents/MacOS/JavaApplicationStub",

@@ -10,7 +10,7 @@ cask "trader-workstation-latest" do
   desc "Latest Standalone Trader Workstation"
   homepage "https://www.interactivebrokers.com/"
 
-  conflicts_with cask: ["trader-workstation", "trader-workstation-beta"]
+  conflicts_with cask: ["trader-workstation", "trader-workstation-stable", "trader-workstation-beta"]
 
   installer script: {
     executable: "#{staged_path}/Trader Workstation #{version.major} Installer.app/Contents/MacOS/JavaApplicationStub",

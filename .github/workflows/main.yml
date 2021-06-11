@@ -1,0 +1,55 @@
+name: GitHub Actions CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  ci-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-10.15]
+
+    steps:
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - name: Cache Homebrew Bundler RubyGems
+        id: cache
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.set-up-homebrew.outputs.gems-path }}
+          key: ${{ runner.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
+          restore-keys: ${{ runner.os }}-rubygems-
+
+      - name: Install Homebrew Bundler RubyGems
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: brew install-bundler-gems
+
+      - name: Trader workstation (stable)
+        run: |
+          brew style --cask ./Casks/trader-workstation-stable.rb
+          brew audit --cask --strict ./Casks/trader-workstation-stable.rb 
+
+          brew install --cask ./Casks/trader-workstation-stable.rb
+          brew uninstall --cask ./Casks/trader-workstation-stable.rb
+
+      - name: Trader workstation (latest)
+        run: |
+          brew style --cask ./Casks/trader-workstation-latest.rb
+          brew audit --cask --strict ./Casks/trader-workstation-latest.rb 
+
+          brew install --cask ./Casks/trader-workstation-latest.rb
+          brew uninstall --cask ./Casks/trader-workstation-latest.rb
+
+      - name: Trader workstation (beta)
+        run: |
+          brew style --cask ./Casks/trader-workstation-beta.rb
+          brew audit --cask --strict ./Casks/trader-workstation-beta.rb 
+
+          brew install --cask ./Casks/trader-workstation-beta.rb
+          brew uninstall --cask ./Casks/trader-workstation-beta.rb
