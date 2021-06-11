@@ -1,4 +1,4 @@
-# Homebrew tap for the latest version of Trader Workstation
+# Homebrew tap for the latest and beta version of Trader Workstation
 
 [![Build status](https://github.com/fasmat/homebrew-trader-workstation/actions/workflows/main.yml/badge.svg)](https://github.com/fasmat/homebrew-trader-workstation/actions/workflows/main.yml)
 
