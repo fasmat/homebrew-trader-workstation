@@ -20,15 +20,24 @@ jobs:
 
       - name: Trader workstation (stable)
         run: |
-          brew install --cask trader-workstation-stable
-          brew uninstall --cask trader-workstation-stable
+          brew style --cask ./Casks/trader-workstation-stable.rb
+          brew audit --cask --strict ./Casks/trader-workstation-stable.rb 
+
+          brew install --cask ./Casks/trader-workstation-stable.rb
+          brew uninstall --cask ./Casks/trader-workstation-stable.rb
 
       - name: Trader workstation (latest)
         run: |
-          brew install --cask trader-workstation-latest
-          brew uninstall --cask trader-workstation-latest
+          brew style --cask ./Casks/trader-workstation-latest.rb
+          brew audit --cask --strict ./Casks/trader-workstation-latest.rb 
+
+          brew install --cask ./Casks/trader-workstation-latest.rb
+          brew uninstall --cask ./Casks/trader-workstation-latest.rb
 
       - name: Trader workstation (beta)
         run: |
-          brew install --cask trader-workstation-beta
-          brew uninstall --cask trader-workstation-beta
+          brew style --cask ./Casks/trader-workstation-beta.rb
+          brew audit --cask --strict ./Casks/trader-workstation-beta.rb 
+
+          brew install --cask ./Casks/trader-workstation-beta.rb
+          brew uninstall --cask ./Casks/trader-workstation-beta.rb
