@@ -1,8 +1,8 @@
 # Homebrew tap for the latest version of Trader Workstation
 
-![Build status](https://github.com/fasmat/homebrew-trader-workstation/actions/workflows/main.yml/badge.svg)
+[![Build status](https://github.com/fasmat/homebrew-trader-workstation/actions/workflows/main.yml/badge.svg)](https://github.com/fasmat/homebrew-trader-workstation/actions/workflows/main.yml)
 
-![Auto-update casks on new releases](https://github.com/fasmat/homebrew-trader-workstation/workflows/Auto-update%20casks%20on%20new%20releases/badge.svg)
+[![Auto-update casks on new releases](https://github.com/fasmat/homebrew-trader-workstation/actions/workflows/auto-update.yml/badge.svg)](https://github.com/fasmat/homebrew-trader-workstation/actions/workflows/auto-update.yml)
 
 ## How do I install this formula
 
