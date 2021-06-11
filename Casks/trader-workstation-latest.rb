@@ -27,8 +27,4 @@ cask "trader-workstation-latest" do
               executable: "#{appdir}/Trader Workstation #{version.major}/Trader Workstation #{version.major} Uninstaller.app/Contents/MacOS/JavaApplicationStub",
               args:       ["-q"],
             }
-
-  caveats do
-    depends_on_java "7+"
-  end
 end

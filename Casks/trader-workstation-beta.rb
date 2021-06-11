@@ -28,8 +28,4 @@ cask "trader-workstation-beta" do
               executable: "#{appdir}/Trader Workstation/Trader Workstation Uninstaller.app/Contents/MacOS/JavaApplicationStub",
               args:       ["-q"],
             }
-
-  caveats do
-    depends_on_java "7+"
-  end
 end
