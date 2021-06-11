@@ -2,26 +2,56 @@ name: GitHub Actions CI
 
 on:
   push:
-    branches: main
+    branches:
+      - main
   pull_request:
 
 env:
-  HOMEBREW_DEVELOPER: 1
-  HOMEBREW_NO_AUTO_UPDATE: 1
+  REPO_NAME: fasmat/homebrew-trader-workstation
 
 jobs:
-  tests:
+  test-bot:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [macos-10.15]
 
     steps:
-    - name: Set up Homebrew
-      uses: Homebrew/actions/setup-homebrew@master
-    - name: Trader workstation (stable)
-      run: brew test-bot --skip-recursive-dependents Casks/trader-workstation.rb
-    - name: Trader workstation (latest)
-      run: brew test-bot --skip-recursive-dependents Casks/trader-workstation-latest.rb
-    - name: Trader workstation (beta)
-      run: brew test-bot --skip-recursive-dependents Casks/trader-workstation-beta.rb
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - name: Cache Homebrew Bundler RubyGems
+        id: cache
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.set-up-homebrew.outputs.gems-path }}
+          key: ${{ runner.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
+          restore-keys: ${{ runner.os }}-rubygems-
+
+      - name: Install Homebrew Bundler RubyGems
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: brew install-bundler-gems
+
+      - name: Setup trader workstation tap
+        run: |
+          brew update-reset "$(brew --repository)"
+          HOMEBREW_TAP_DIR="/usr/local/Homebrew/Library/Taps/$(REPO_NAME)"
+          mkdir -p "$HOMEBREW_TAP_DIR"
+          rm -rf "$HOMEBREW_TAP_DIR"
+          ln -s "$PWD" "$HOMEBREW_TAP_DIR"
+
+      - name: Trader workstation (stable)
+        run: |
+          brew install --cask trader-workstation
+          brew uninstall --cask trader-workstation
+
+      - name: Trader workstation (latest)
+        run: |
+          brew install --cask trader-workstation-latest
+          brew uninstall --cask trader-workstation-latest
+
+      - name: Trader workstation (beta)
+        run: |
+          brew install --cask trader-workstation-beta
+          brew uninstall --cask trader-workstation-beta
