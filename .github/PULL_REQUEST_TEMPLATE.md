@@ -2,5 +2,5 @@
 
 After making all changes to the cask:
 
-- [ ] `brew audit --cask --strict {{cask_file}}` is error-free.
+- [ ] `brew audit --cask --online --strict {{cask_file}}` is error-free.
 - [ ] `brew style --cask {{cask_file}}` is error-free.
