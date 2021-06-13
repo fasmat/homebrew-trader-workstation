@@ -1,21 +1,16 @@
 # typed: false
 # frozen_string_literal: true
 
-cask "trader-workstation-latest" do
-  version "985.1a"
+cask "trader-workstation-stable" do
+  version "981.3b"
   sha256 :no_check
 
-  url "https://download2.interactivebrokers.com/installers/tws/latest-standalone/tws-latest-standalone-macosx-x64.dmg"
-  name "Trader Workstation Latest"
-  desc "Latest Standalone Trader Workstation"
+  url "https://download2.interactivebrokers.com/installers/tws/stable-standalone/tws-stable-standalone-macosx-x64.dmg"
+  name "Trader Workstation"
+  desc "Stable Standalone Trader Workstation"
   homepage "https://www.interactivebrokers.com/"
 
-  livecheck do
-    url "https://download2.interactivebrokers.com/installers/tws/latest-standalone/version.json"
-    regex(/"buildVersion"\s*:\s*"(\d+(?:\.\d+)+[a-z]*)"/i)
-  end
-
-  conflicts_with cask: ["trader-workstation", "trader-workstation-stable", "trader-workstation-beta"]
+  conflicts_with cask: ["trader-workstation", "trader-workstation-latest", "trader-workstation-beta"]
 
   installer script: {
     executable: "#{staged_path}/Trader Workstation #{version.major} Installer.app/Contents/MacOS/JavaApplicationStub",

@@ -1,6 +1,10 @@
-# Homebrew tap for the latest and beta version of Trader Workstation
+# Homebrew tap for Trader Workstation by Interactive Brokers
 
 [![Build status](https://github.com/fasmat/homebrew-trader-workstation/actions/workflows/main.yml/badge.svg)](https://github.com/fasmat/homebrew-trader-workstation/actions/workflows/main.yml)
+
+[![Auto-update casks on new releases](https://github.com/fasmat/homebrew-trader-workstation/actions/workflows/auto-update.yml/badge.svg)](https://github.com/fasmat/homebrew-trader-workstation/actions/workflows/auto-update.yml)
+
+This homebrew tap provides casks for installing Trader Workstation by Interactive Brokers in all available versions.
 
 ## How do I install this formula
 
