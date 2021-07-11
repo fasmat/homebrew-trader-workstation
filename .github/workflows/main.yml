@@ -17,18 +17,21 @@ jobs:
       - name: Set up Homebrew
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
+        with:
+          test-bot: false
 
-      - name: Cache Homebrew Bundler RubyGems
+      - name: Cache Homebrew Gems
         id: cache
-        uses: actions/cache@v1
+        uses: actions/cache@v2.1.6
         with:
           path: ${{ steps.set-up-homebrew.outputs.gems-path }}
           key: ${{ runner.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
           restore-keys: ${{ runner.os }}-rubygems-
 
       - name: Install Homebrew Bundler RubyGems
-        if: steps.cache.outputs.cache-hit != 'true'
+        id: gems
         run: brew install-bundler-gems
+        if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Trader workstation (stable)
         run: |
