@@ -18,13 +18,13 @@ cask "trader-workstation-latest" do
   conflicts_with cask: ["trader-workstation", "trader-workstation-stable", "trader-workstation-beta"]
 
   installer script: {
-    executable: "#{staged_path}/Trader Workstation #{version.major} Installer.app/Contents/MacOS/JavaApplicationStub",
+    executable: "#{staged_path}/Trader Workstation #{version.major_minor} Installer.app/Contents/MacOS/JavaApplicationStub",
     args:       ["-q"],
   }
 
   uninstall quit:   "com.install4j.5889-6375-8446-2021.22",
             script: {
-              executable: "#{appdir}/Trader Workstation #{version.major}/Trader Workstation #{version.major} Uninstaller.app/Contents/MacOS/JavaApplicationStub",
+              executable: "#{appdir}/Trader Workstation #{version.major_minor}/Trader Workstation #{version.major_minor} Uninstaller.app/Contents/MacOS/JavaApplicationStub",
               args:       ["-q"],
             }
 
