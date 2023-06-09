@@ -35,7 +35,7 @@ cask "trader-workstation-stable" do
 
   uninstall quit:   "com.install4j.5889-6375-8446-2021",
             script: {
-              executable: "#{appdir}/Trader Workstation #{version.major_minor}/Trader Workstation #{version.major} Uninstaller.app/Contents/MacOS/JavaApplicationStub",
+              executable: "#{appdir}/Trader Workstation #{version.major_minor}/Trader Workstation #{version.major_minor} Uninstaller.app/Contents/MacOS/JavaApplicationStub",
               args:       ["-q"],
             }
 
