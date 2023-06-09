@@ -10,7 +10,7 @@ cask "trader-workstation-latest" do
 
   url "https://download2.interactivebrokers.com/installers/tws/latest-standalone/tws-latest-standalone-#{os}-#{arch}.dmg"
   name "Trader Workstation Latest"
-  desc "Trader Workstation Standalone Latest"
+  desc "Standalone of Trader Workstation Latest"
   homepage "https://www.interactivebrokers.com/"
 
   livecheck do

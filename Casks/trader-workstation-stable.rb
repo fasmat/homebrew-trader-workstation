@@ -10,7 +10,7 @@ cask "trader-workstation-stable" do
 
   url "https://download2.interactivebrokers.com/installers/tws/stable-standalone/tws-stable-standalone-#{os}-#{arch}.dmg"
   name "Trader Workstation"
-  desc "Trader Workstation Standalone Stable"
+  desc "Standalone of Trader Workstation Stable"
   homepage "https://www.interactivebrokers.com/"
 
   livecheck do
@@ -38,7 +38,7 @@ cask "trader-workstation-stable" do
               executable: "#{appdir}/Trader Workstation/Trader Workstation Uninstaller.app/Contents/MacOS/JavaApplicationStub",
               args:       ["-q"],
             }
-  
+
   zap trash: [
     "#{appdir}/Trader Workstation",
     "~/Jts",

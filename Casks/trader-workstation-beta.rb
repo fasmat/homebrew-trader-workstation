@@ -10,7 +10,7 @@ cask "trader-workstation-beta" do
 
   url "https://download2.interactivebrokers.com/installers/tws/beta/tws-beta-#{os}-#{arch}.dmg"
   name "Trader Workstation Beta"
-  desc "Trader Workstation Beta"
+  desc "Beta of Trader Workstation"
   homepage "https://www.interactivebrokers.com/"
 
   livecheck do
