@@ -2,12 +2,15 @@
 # frozen_string_literal: true
 
 cask "trader-workstation-beta" do
+  arch arm: "arm", intel: "x64"
+  os = on_arch_conditional arm: "macos", intel: "macosx"
+
   version "10.24.0b"
   sha256 :no_check
 
-  url "https://download2.interactivebrokers.com/installers/tws/beta/tws-beta-macosx-x64.dmg"
+  url "https://download2.interactivebrokers.com/installers/tws/beta/tws-beta-#{os}-#{arch}.dmg"
   name "Trader Workstation Beta"
-  desc "Beta Trader Workstation"
+  desc "Trader Workstation Beta"
   homepage "https://www.interactivebrokers.com/"
 
   livecheck do
@@ -23,13 +26,23 @@ cask "trader-workstation-beta" do
     args:       ["-q"],
   }
 
-  uninstall quit:   "com.install4j.5889-6375-8446-2021.22",
+  uninstall_preflight do
+    ohai "Stopping all running instances of Trader Workstation prior to uninstall"
+    system_command "/usr/bin/pkill", args: ["-f", "#{appdir}/Trader Workstation/Trader Workstation.app"]
+
+  rescue RuntimeError
+    ohai "No running instances of Trader Workstation found"
+  end
+
+  uninstall quit:   "com.install4j.5889-6375-8446-2021",
             script: {
               executable: "#{appdir}/Trader Workstation/Trader Workstation Uninstaller.app/Contents/MacOS/JavaApplicationStub",
               args:       ["-q"],
             }
 
-  caveats do
-    depends_on_java "7+"
-  end
+  zap trash: [
+    "#{appdir}/Trader Workstation",
+    "~/Jts",
+    "~/Library/Application Support/Trader Workstation",
+  ]
 end
