@@ -33,11 +33,6 @@ jobs:
         run: brew install-bundler-gems
         if: steps.cache.outputs.cache-hit != 'true'
 
-      - name: Setup tap for testing
-        run: |
-          brew tap-new fasmat/homebrew-trader-workstation --no-git
-          cp Casks $(brew --repository)/Library/Taps/fasmat/homebrew-trader-workstation
-
       - name: Trader workstation (stable)
         run: |
           brew style --cask trader-workstation-stable
@@ -61,8 +56,3 @@ jobs:
 
           brew install --cask trader-workstation-beta
           brew uninstall --cask trader-workstation-beta
-
-      - name: Cleanup testing tap
-        if: always()
-        run: |
-          brew untap fasmat/homebrew-trader-workstation
