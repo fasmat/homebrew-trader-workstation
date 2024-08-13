@@ -5,7 +5,7 @@ cask "ibkr-desktop-latest" do
   arch arm: "arm", intel: "x64"
   os = on_arch_conditional arm: "macos", intel: "macosx"
 
-  version "0.09.0u"
+  version "0.09.0v"
   sha256 :no_check
 
   url "https://download2.interactivebrokers.com/installers/ntws/latest-standalone/ntws-latest-standalone-#{os}-#{arch}.dmg"
