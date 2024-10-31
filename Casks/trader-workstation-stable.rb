@@ -5,7 +5,7 @@ cask "trader-workstation-stable" do
   arch arm: "arm", intel: "x64"
   os = on_arch_conditional arm: "macos", intel: "macosx"
 
-  version "10.30.1o"
+  version "10.30.1p"
   sha256 :no_check
 
   url "https://download2.interactivebrokers.com/installers/tws/stable-standalone/tws-stable-standalone-#{os}-#{arch}.dmg"
