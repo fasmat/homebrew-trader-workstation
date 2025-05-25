@@ -57,10 +57,18 @@ jobs:
           brew install --cask trader-workstation-beta
           brew uninstall --cask trader-workstation-beta
 
-      - name: IBKR Desktop
+      - name: IBKR Desktop (latest)
         run: |
           brew style --cask ibkr-desktop-latest
           brew audit --cask --strict ibkr-desktop-latest
 
           brew install --cask ibkr-desktop-latest
           brew uninstall --cask ibkr-desktop-latest
+
+      - name: IBKR Desktop (beta)
+        run: |
+          brew style --cask ibkr-desktop-beta
+          brew audit --cask --strict ibkr-desktop-beta
+
+          brew install --cask ibkr-desktop-beta
+          brew uninstall --cask ibkr-desktop-beta
