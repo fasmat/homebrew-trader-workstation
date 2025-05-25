@@ -5,13 +5,20 @@ on:
     branches:
       - main
   pull_request:
+  workflow_dispatch:
+  schedule:
+    # Run every Saturday at midnight UTC
+    - cron: '0 0 * * 6'
 
 jobs:
   ci-test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-12, macos-13]
+        os: 
+          - macos-13
+          - macos-14
+          - macos-15
 
     steps:
       - name: Set up Homebrew
@@ -60,7 +67,7 @@ jobs:
       - name: IBKR Desktop (latest)
         run: |
           brew style --cask ibkr-desktop-latest
-          brew audit --cask --strict ibkr-desktop-latest
+          brew audit --cask --online --strict ibkr-desktop-latest
 
           brew install --cask ibkr-desktop-latest
           brew uninstall --cask ibkr-desktop-latest
@@ -68,7 +75,7 @@ jobs:
       - name: IBKR Desktop (beta)
         run: |
           brew style --cask ibkr-desktop-beta
-          brew audit --cask --strict ibkr-desktop-beta
+          brew audit --cask --online --strict ibkr-desktop-beta
 
           brew install --cask ibkr-desktop-beta
           brew uninstall --cask ibkr-desktop-beta
