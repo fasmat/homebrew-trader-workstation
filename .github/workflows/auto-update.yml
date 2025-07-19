@@ -26,7 +26,7 @@ jobs:
           sed -i "s/version .*/version $(cat stable)/g" Casks/trader-workstation-stable.rb
           sed -i "s/version .*/version $(cat beta)/g" Casks/trader-workstation-beta.rb
           sed -i "s/version .*/version $(cat ntws_latest)/g" Casks/ibkr-desktop-latest.rb
-          sed -i "s/version .*/version $(cat ntws_beta)/g" Casks/ibkr-desktop-stable.rb
+          sed -i "s/version .*/version $(cat ntws_beta)/g" Casks/ibkr-desktop-beta.rb
 
           if [[ `git status --porcelain` ]]; then
             echo "New versions detected"
