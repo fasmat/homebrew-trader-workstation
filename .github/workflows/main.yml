@@ -51,7 +51,7 @@ jobs:
 
           # Convert filenames to just cask tokens (strip path & extension)
           tokens=$(echo "$changed" | sed -E 's|^Casks/||; s|\.rb$||')
-          json=$(printf '%s\n' "$tokens" | jq -R . | jq -s .)
+          json=$(printf '%s\n' "$tokens" | jq -R . | jq -s -c .)
           
           echo "Detected casks: $json"
           echo "casks=$json" >> $GITHUB_OUTPUT
