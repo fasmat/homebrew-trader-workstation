@@ -5,18 +5,72 @@ on:
     branches:
       - main
   pull_request:
+    paths:
+      - ".github/workflows/**"
+      - "Casks/**"
   workflow_dispatch:
   schedule:
-    # Run every Saturday at midnight UTC
-    - cron: "0 0 * * 6"
+    # Run every Saturday at 1:30 AM UTC
+    - cron: "30 1 * * 6"
 
 jobs:
+  detect_casks:
+    runs-on: ubuntu-latest
+    outputs:
+      casks: ${{ steps.detect.outputs.casks }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Detect changed Casks in PRs
+        if: github.event_name == 'pull_request'
+        run: |
+          changed=$(git diff --name-only origin/${{ github.base_ref }} HEAD | grep '^Casks/.*\.rb$' || true)
+
+          if [[ -z "$changed" ]]; then
+            echo "No cask changes detected."
+            echo "casks=[]" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Convert filenames to just cask tokens (strip path & extension)
+          tokens=$(echo "$changed" | sed -E 's|^Casks/||; s|\.rb$||')
+          json=$(printf '%s\n' "$tokens" | jq -R . | jq -s .)
+          
+          echo "Detected casks: $json"
+          echo "casks=$json" >> $GITHUB_OUTPUT
+
+      - name: Detect changed Casks after push
+        if: github.event_name == 'push'
+        run: |
+          changed=$(git diff --name-only HEAD^ HEAD | grep '^Casks/.*\.rb$' || true)
+
+          if [[ -z "$changed" ]]; then
+            echo "No cask changes detected."
+            echo "casks=[]" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Convert filenames to just cask tokens (strip path & extension)
+          tokens=$(echo "$casks" | sed -E 's|^Casks/||; s|\.rb$||')
+          json=$(printf '%s\n' "$tokens" | jq -R . | jq -s .)
+
+          echo "Detected casks: $json"
+          echo "casks=$json" >> $GITHUB_OUTPUT
+
+      - name: Default to all Casks
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+        run: |
+          casks=$(find Casks -name '*.rb' -exec basename {} .rb \; | jq -R . | jq -s .)
+          echo "casks=$casks" >> $GITHUB_OUTPUT
+
   ci-test:
+    needs: detect_casks
+    if: ${{ fromJson(needs.detect_casks.outputs.casks) != '[]' }}
     runs-on: ${{ matrix.os }}
-    env:
-      HOMEBREW_DEVELOPER: "1"
     strategy:
       matrix:
+        cask: ${{ fromJson(needs.detect_casks.outputs.casks) }}
         os:
           - macos-13
           - macos-14
@@ -27,6 +81,7 @@ jobs:
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
         with:
+          stable: true
           test-bot: false
 
       - name: Cache Homebrew Gems
@@ -42,42 +97,20 @@ jobs:
         run: brew install-bundler-gems
         if: steps.cache.outputs.cache-hit != 'true'
 
-      - name: Trader workstation (stable)
+      - name: Link local tap into Homebrew
         run: |
-          brew style --cask trader-workstation-stable
-          brew audit --cask --online --strict trader-workstation-stable
+          mkdir -p "$(brew --repo ${{ github.repository }})"
+          rm -rf "$(brew --repo ${{ github.repository }})"
+          ln -s "$GITHUB_WORKSPACE" "$(brew --repo ${{ github.repository }})"
 
-          brew install --cask trader-workstation-stable
-          brew uninstall --cask trader-workstation-stable
+      - name: Style check cask
+        run: brew style --cask "${{ matrix.cask }}"
 
-      - name: Trader workstation (latest)
-        run: |
-          brew style --cask trader-workstation-latest
-          brew audit --cask --online --strict trader-workstation-latest
+      - name: Audit cask
+        run: brew audit --cask --online --strict "${{ matrix.cask }}"
 
-          brew install --cask trader-workstation-latest
-          brew uninstall --cask trader-workstation-latest
+      - name: Install cask
+        run: brew install --cask "${{ matrix.cask }}"
 
-      - name: Trader workstation (beta)
-        run: |
-          brew style --cask trader-workstation-beta
-          brew audit --cask --online --strict trader-workstation-beta
-
-          brew install --cask trader-workstation-beta
-          brew uninstall --cask trader-workstation-beta
-
-      - name: IBKR Desktop (latest)
-        run: |
-          brew style --cask ibkr-desktop-latest
-          brew audit --cask --online --strict ibkr-desktop-latest
-
-          brew install --cask ibkr-desktop-latest
-          brew uninstall --cask ibkr-desktop-latest
-
-      - name: IBKR Desktop (beta)
-        run: |
-          brew style --cask ibkr-desktop-beta
-          brew audit --cask --online --strict ibkr-desktop-beta
-
-          brew install --cask ibkr-desktop-beta
-          brew uninstall --cask ibkr-desktop-beta
+      - name: Uninstall cask
+        run: brew uninstall --cask "${{ matrix.cask }}"
