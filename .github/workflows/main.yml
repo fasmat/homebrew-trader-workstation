@@ -61,6 +61,7 @@ jobs:
     if: ${{ needs.detect_casks.outputs.casks != '[]' && needs.detect_casks.outputs.casks != '' }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         cask: ${{ fromJson(needs.detect_casks.outputs.casks) }}
         os:
