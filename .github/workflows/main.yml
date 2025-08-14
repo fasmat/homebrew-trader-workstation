@@ -91,12 +91,6 @@ jobs:
         run: brew install-bundler-gems
         if: steps.cache.outputs.cache-hit != 'true'
 
-      - name: Link local tap into Homebrew
-        run: |
-          mkdir -p "$(brew --repo ${{ github.repository }})"
-          rm -rf "$(brew --repo ${{ github.repository }})"
-          ln -s "$GITHUB_WORKSPACE" "$(brew --repo ${{ github.repository }})"
-
       - name: Style check cask
         run: brew style --cask "${{ matrix.cask }}"
 
