@@ -56,7 +56,8 @@ jobs:
           echo "Detected casks: $json"
           echo "casks=$json" >> $GITHUB_OUTPUT
 
-  ci-test:
+  test_casks:
+    name: "${{ matrix.os }}: Test ${{ matrix.cask }}"
     needs: detect_casks
     if: ${{ needs.detect_casks.outputs.casks != '[]' && needs.detect_casks.outputs.casks != '' }}
     runs-on: ${{ matrix.os }}
