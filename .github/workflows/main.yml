@@ -21,11 +21,27 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Detect changed Casks in PRs
-        if: github.event_name == 'pull_request'
+      - name: Detect Casks to test
+        id: detect
         run: |
-          changed=$(git diff --name-only origin/${{ github.base_ref }} HEAD | grep '^Casks/.*\.rb$' || true)
+
+          case "${{ github.event_name }}" in
+          "pull_request")
+            # For pull requests, check against the base branch
+            changed=$(git diff --name-only origin/${{ github.base_ref }} HEAD | grep '^Casks/.*\.rb$' || true)
+            ;;
+          "push")
+            # For pushes, check against the previous commit
+            changed=$(git diff --name-only HEAD^ HEAD | grep '^Casks/.*\.rb$' || true)
+            ;;
+          *)
+            # By default, include all Casks
+            changed=$(find Casks -name '*.rb' || true)
+            ;;
+          esac
 
           if [[ -z "$changed" ]]; then
             echo "No cask changes detected."
@@ -40,33 +56,9 @@ jobs:
           echo "Detected casks: $json"
           echo "casks=$json" >> $GITHUB_OUTPUT
 
-      - name: Detect changed Casks after push
-        if: github.event_name == 'push'
-        run: |
-          changed=$(git diff --name-only HEAD^ HEAD | grep '^Casks/.*\.rb$' || true)
-
-          if [[ -z "$changed" ]]; then
-            echo "No cask changes detected."
-            echo "casks=[]" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-
-          # Convert filenames to just cask tokens (strip path & extension)
-          tokens=$(echo "$casks" | sed -E 's|^Casks/||; s|\.rb$||')
-          json=$(printf '%s\n' "$tokens" | jq -R . | jq -s .)
-
-          echo "Detected casks: $json"
-          echo "casks=$json" >> $GITHUB_OUTPUT
-
-      - name: Default to all Casks
-        if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
-        run: |
-          casks=$(find Casks -name '*.rb' -exec basename {} .rb \; | jq -R . | jq -s .)
-          echo "casks=$casks" >> $GITHUB_OUTPUT
-
   ci-test:
     needs: detect_casks
-    if: ${{ fromJson(needs.detect_casks.outputs.casks) != '[]' }}
+    if: ${{ needs.detect_casks.outputs.casks != '[]' && needs.detect_casks.outputs.casks != '' }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
