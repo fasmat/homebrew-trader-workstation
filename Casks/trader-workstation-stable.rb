@@ -8,9 +8,9 @@ cask "trader-workstation-stable" do
   version "10.37.1k"
   sha256 :no_check
 
-  url "https://download2.interactiverokers.com/installers/tws/stable-standalone/tws-stable-standalone-#{os}-#{arch}.dmg"
+  url "https://download2.interactivebrokers.com/installers/tws/stable-standalone/tws-stable-standalone-#{os}-#{arch}.dmg"
   name "Trader Workstation"
-  desc "Standalone of Trader Workstation Stable"
+  desc "Standalone of Trader Workstation"
   homepage "https://www.interactivebrokers.com/"
 
   livecheck do
