@@ -34,8 +34,15 @@ jobs:
             changed=$(git diff --name-only origin/${{ github.base_ref }} HEAD | grep '^Casks/.*\.rb$' || true)
             ;;
           "workflow_run")
-            # For pushes, check against the previous commit
-            changed=$(git diff --name-only HEAD^ HEAD | grep '^Casks/.*\.rb$' || true)
+            # For pushes, check against the previous commit, but only if the previous commit is less than 1 hour old
+            prev_commit_time=$(git show -s --format=%ct HEAD^)
+            now=$(date +%s)
+            age=$(( now - prev_commit_time ))
+
+            changed=""
+            if [[ $age -lt 3600 ]]; then
+              changed=$(git diff --name-only HEAD^ HEAD | grep '^Casks/.*\.rb$' || true)
+            fi
             ;;
           *)
             # By default, include all Casks
