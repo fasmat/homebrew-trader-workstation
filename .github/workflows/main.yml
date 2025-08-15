@@ -35,12 +35,18 @@ jobs:
             ;;
           "workflow_run")
             # For pushes, check against the previous commit, but only if the previous commit is less than 1 hour old
+
             prev_commit_time=$(git show -s --format=%ct HEAD^)
+            echo "Previous commit time: $prev_commit_time"
+
             now=$(date +%s)
+            echo "Current time: $now"
+
             age=$(( now - prev_commit_time ))
 
             changed=""
             if [[ $age -lt 3600 ]]; then
+              echo "Previous commit is less than 1 hour old, checking for changes."
               changed=$(git diff --name-only HEAD^ HEAD | grep '^Casks/.*\.rb$' || true)
             fi
             ;;
@@ -59,7 +65,7 @@ jobs:
           # Convert filenames to just cask tokens (strip path & extension)
           tokens=$(echo "$changed" | sed -E 's|^Casks/||; s|\.rb$||')
           json=$(printf '%s\n' "$tokens" | jq -R . | jq -s -c .)
-          
+
           echo "Detected casks: $json"
           echo "casks=$json" >> $GITHUB_OUTPUT
 
