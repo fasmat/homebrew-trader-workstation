@@ -2,7 +2,8 @@ name: Continuous Integration
 
 on:
   workflow_run:
-    workflows: ["Auto-update casks on new releases"]
+    workflows:
+      - "Auto-update casks on new releases"
     types:
       - completed
   pull_request:
@@ -16,7 +17,8 @@ on:
 
 jobs:
   detect_casks:
-    runs-on: ubuntu-latest
+    name: Detect Casks to test
+    runs-on: ubuntu-24.04
     outputs:
       casks: ${{ steps.detect.outputs.casks }}
     steps:
@@ -32,20 +34,23 @@ jobs:
           "pull_request")
             # For pull requests, check against the base branch
             changed=$(git diff --name-only origin/${{ github.base_ref }} HEAD | grep '^Casks/.*\.rb$' || true)
+
+            # if workflows were changed test all casks
+            if [[ $(git diff --name-only origin/${{ github.base_ref }} HEAD | grep '^\.github/workflows/.*\.yml$' || true) ]]; then
+              echo "Workflows changed, testing all casks."
+              changed=$(find Casks -name '*.rb' || true)
+            fi
             ;;
           "workflow_run")
             # For pushes, check against the previous commit, but only if the previous commit is less than 1 hour old
-
             prev_commit_time=$(git show -s --format=%ct HEAD^)
             echo "Previous commit time: $prev_commit_time"
 
             now=$(date +%s)
             echo "Current time: $now"
 
-            age=$(( now - prev_commit_time ))
-
             changed=""
-            if [[ $age -lt 3600 ]]; then
+            if [[ $(( now - prev_commit_time )) -lt 3600 ]]; then
               echo "Previous commit is less than 1 hour old, checking for changes."
               changed=$(git diff --name-only HEAD^ HEAD | grep '^Casks/.*\.rb$' || true)
             fi
@@ -69,6 +74,35 @@ jobs:
           echo "Detected casks: $json"
           echo "casks=$json" >> $GITHUB_OUTPUT
 
+  audit_casks:
+    name: "Audit casks"
+    needs: detect_casks
+    if: ${{ needs.detect_casks.outputs.casks != '[]' && needs.detect_casks.outputs.casks != '' }}
+    runs-on: macos-15
+    steps:
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+        with:
+          stable: true
+          test-bot: false
+      - name: Cache Homebrew Gems
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.set-up-homebrew.outputs.gems-path }}
+          key: ${{ matrix.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
+          restore-keys: ${{ matrix.os }}-rubygems-
+      - name: Install Homebrew Gems
+        id: gems
+        run: brew install-bundler-gems
+        if: steps.cache.outputs.cache-hit != 'true'
+
+      - name: Style check cask
+        run: brew style --casks ${{ join(fromJson(needs.detect_casks.outputs.casks), ' ') }}
+      - name: Audit cask
+        run: brew audit --casks --online --strict ${{ join(fromJson(needs.detect_casks.outputs.casks), ' ') }}
+
   test_casks:
     name: "${{ matrix.os }}: Test ${{ matrix.cask }}"
     needs: detect_casks
@@ -82,7 +116,6 @@ jobs:
           - macos-13
           - macos-14
           - macos-15
-
     steps:
       - name: Set up Homebrew
         id: set-up-homebrew
@@ -90,7 +123,6 @@ jobs:
         with:
           stable: true
           test-bot: false
-
       - name: Cache Homebrew Gems
         id: cache
         uses: actions/cache@v4
@@ -98,20 +130,29 @@ jobs:
           path: ${{ steps.set-up-homebrew.outputs.gems-path }}
           key: ${{ matrix.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
           restore-keys: ${{ matrix.os }}-rubygems-
-
       - name: Install Homebrew Gems
         id: gems
         run: brew install-bundler-gems
         if: steps.cache.outputs.cache-hit != 'true'
 
-      - name: Style check cask
-        run: brew style --cask "${{ matrix.cask }}"
-
-      - name: Audit cask
-        run: brew audit --cask --online --strict "${{ matrix.cask }}"
-
       - name: Install cask
         run: brew install --cask "${{ matrix.cask }}"
-
       - name: Uninstall cask
         run: brew uninstall --cask "${{ matrix.cask }}"
+
+  ci-status:
+    name: CI Status
+    if: always()
+    needs:
+      - audit_casks
+      - test_casks
+    runs-on: ubuntu-24.04
+    env:
+      status: ${{ (( needs.audit_casks.result == 'success' && needs.test_casks.result == 'success' )) && 'success' || 'failure' }}
+    steps:
+      - name: Mark the job as succeeded
+        if: env.status == 'success'
+        run: exit 0
+      - name: Mark the job as failed
+        if: env.status != 'success'
+        run: exit 1
