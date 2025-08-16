@@ -1,11 +1,6 @@
 name: Continuous Integration
 
 on:
-  workflow_run:
-    workflows:
-      - "Auto-update casks on new releases"
-    types:
-      - completed
   pull_request:
     paths:
       - ".github/workflows/**"
@@ -39,20 +34,6 @@ jobs:
             if [[ $(git diff --name-only origin/${{ github.base_ref }} HEAD | grep '^\.github/workflows/.*\.yml$' || true) ]]; then
               echo "Workflows changed, testing all casks."
               changed=$(find Casks -name '*.rb' || true)
-            fi
-            ;;
-          "workflow_run")
-            # For pushes, check against the previous commit, but only if the previous commit is less than 1 hour old
-            prev_commit_time=$(git show -s --format=%ct HEAD^)
-            echo "Previous commit time: $prev_commit_time"
-
-            now=$(date +%s)
-            echo "Current time: $now"
-
-            changed=""
-            if [[ $(( now - prev_commit_time )) -lt 3600 ]]; then
-              echo "Previous commit is less than 1 hour old, checking for changes."
-              changed=$(git diff --name-only HEAD^ HEAD | grep '^Casks/.*\.rb$' || true)
             fi
             ;;
           *)
