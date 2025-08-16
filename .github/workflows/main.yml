@@ -149,12 +149,17 @@ jobs:
       - test_casks
     runs-on: ubuntu-24.04
     steps:
-      - name: Mark the job as succeeded if no casks needed testing
-        if: needs.detect_casks.outputs.casks == '[]' || needs.detect_casks.outputs.casks == ''
-        run: exit 0
-      - name: Mark the job as succeeded if all tests passed
-        if: needs.audit_casks.result == 'success' && needs.test_casks.result == 'success'
-        run: exit 0
-      - name: Mark the job as failed if any tests failed
-        if: needs.audit_casks.result != 'success' || needs.test_casks.result != 'success'
-        run: exit 1
+      - name: Set final CI status
+        run: |
+          if [[ "${{ needs.detect_casks.outputs.casks }}" == "[]" || "${{ needs.detect_casks.outputs.casks }}" == "" ]]; then
+            echo "No casks to test. Passing job."
+            exit 0
+          fi
+
+          if [[ "${{ needs.audit_casks.result }}" == "success" && "${{ needs.test_casks.result }}" == "success" ]]; then
+            echo "All tests passed."
+            exit 0
+          fi
+
+          echo "Some tests failed."
+          exit 1
