@@ -9,44 +9,52 @@ on:
 jobs:
   scheduled:
     runs-on: ubuntu-24.04
-    permissions:
-      contents: write
     steps:
       - name: Check out this repo
         uses: actions/checkout@v5
       - name: Fetch latest versions
+        id: versions
         run: |-
           MILLISECONDS=$(date '+%s')$(($RANDOM % 1000))
-          curl "https://download2.interactivebrokers.com/installers/tws/latest-standalone/version.json?_=$MILLISECONDS&callback=twslatest_callback" | jq -R 'capture("\\((?<x>.*)\\)[^)]*$").x | fromjson | .buildVersion' > latest
-          curl "https://download2.interactivebrokers.com/installers/tws/stable-standalone/version.json?_=$MILLISECONDS&callback=twsstable_callback" | jq -R 'capture("\\((?<x>.*)\\)[^)]*$").x | fromjson | .buildVersion' > stable
-          curl "https://download2.interactivebrokers.com/installers/tws/beta/version.json?_=$MILLISECONDS&callback=twsbetaupdatable_callback" | jq -R 'capture("\\((?<x>.*)\\)[^)]*$").x | fromjson | .buildVersion' > beta
-          curl "https://download2.interactivebrokers.com/installers/ntws/latest-standalone/version.json?_=$MILLISECONDS&callback=ntwslatest_callback" | jq -R 'capture("\\((?<x>.*)\\)[^)]*$").x | fromjson | .buildVersion' > ntws_latest
-          curl "https://download2.interactivebrokers.com/installers/ntws/beta-standalone/version.json?_=$MILLISECONDS&callback=ntwsbeta_callback" | jq -R 'capture("\\((?<x>.*)\\)[^)]*$").x | fromjson | .buildVersion' > ntws_beta
+          latest=$(curl "https://download2.interactivebrokers.com/installers/tws/latest-standalone/version.json?_=$MILLISECONDS&callback=twslatest_callback" | jq -R 'capture("\\((?<x>.*)\\)[^)]*$").x | fromjson | .buildVersion')
+          stable=$(curl "https://download2.interactivebrokers.com/installers/tws/stable-standalone/version.json?_=$MILLISECONDS&callback=twsstable_callback" | jq -R 'capture("\\((?<x>.*)\\)[^)]*$").x | fromjson | .buildVersion')
+          beta=$(curl "https://download2.interactivebrokers.com/installers/tws/beta/version.json?_=$MILLISECONDS&callback=twsbetaupdatable_callback" | jq -R 'capture("\\((?<x>.*)\\)[^)]*$").x | fromjson | .buildVersion')
+          ntws_latest=$(curl "https://download2.interactivebrokers.com/installers/ntws/latest-standalone/version.json?_=$MILLISECONDS&callback=ntwslatest_callback" | jq -R 'capture("\\((?<x>.*)\\)[^)]*$").x | fromjson | .buildVersion')
+          ntws_beta=$(curl "https://download2.interactivebrokers.com/installers/ntws/beta-standalone/version.json?_=$MILLISECONDS&callback=ntwsbeta_callback" | jq -R 'capture("\\((?<x>.*)\\)[^)]*$").x | fromjson | .buildVersion')
+
+          echo "latest=$latest" >> $GITHUB_OUTPUT
+          echo "stable=$stable" >> $GITHUB_OUTPUT
+          echo "beta=$beta" >> $GITHUB_OUTPUT
+          echo "ntws_latest=$ntws_latest" >> $GITHUB_OUTPUT
+          echo "ntws_beta=$ntws_beta" >> $GITHUB_OUTPUT
+          echo "timestamp=$(date -u)" >> $GITHUB_OUTPUT
       - name: Update Casks
         run: |-
-          sed -i "s/version .*/version $(cat latest)/g" Casks/trader-workstation-latest.rb
-          sed -i "s/version .*/version $(cat stable)/g" Casks/trader-workstation-stable.rb
-          sed -i "s/version .*/version $(cat beta)/g" Casks/trader-workstation-beta.rb
-          sed -i "s/version .*/version $(cat ntws_latest)/g" Casks/ibkr-desktop-latest.rb
-          sed -i "s/version .*/version $(cat ntws_beta)/g" Casks/ibkr-desktop-beta.rb
+          sed -i "s/version .*/version \"${{ steps.versions.outputs.latest }}\"/g" Casks/trader-workstation-latest.rb
+          sed -i "s/version .*/version \"${{ steps.versions.outputs.stable }}\"/g" Casks/trader-workstation-stable.rb
+          sed -i "s/version .*/version \"${{ steps.versions.outputs.beta }}\"/g" Casks/trader-workstation-beta.rb
+          sed -i "s/version .*/version \"${{ steps.versions.outputs.ntws_latest }}\"/g" Casks/ibkr-desktop-latest.rb
+          sed -i "s/version .*/version \"${{ steps.versions.outputs.ntws_beta }}\"/g" Casks/ibkr-desktop-beta.rb
 
-          if [[ `git status --porcelain` ]]; then
-            echo "New versions detected"
-            echo "  Latest: $(cat latest)"
-            echo "  Stable: $(cat stable)"
-            echo "  Beta: $(cat beta)"
-            echo "  IBKR Desktop: $(cat ntws_latest)"
-            echo "  IBKR Desktop Beta: $(cat ntws_beta)"
-            rm latest
-            rm stable
-            rm beta
-            rm ntws_latest
-            rm ntws_beta
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.PAT }}
+          commit-message: "Auto-update TWS Casks: ${{ steps.versions.outputs.timestamp }}"
+          title: "Update Trader Workstation and IBKR Desktop casks"
+          branch: update-tws-casks
+          body: |
+            Automated update of Trader Workstation and IBKR Desktop casks.
 
-            git config user.name "Auto Updater"
-            git config user.email "actions@users.noreply.github.com"
-            git add -A
-            timestamp=$(date -u)
-            git commit -m "Auto-update TWS Casks: ${timestamp}" || exit 0
-            git push
-          fi
+            - Latest: ${{ steps.versions.outputs.latest }}
+            - Stable: ${{ steps.versions.outputs.stable }}
+            - Beta: ${{ steps.versions.outputs.beta }}
+            - IBKR Desktop: ${{ steps.versions.outputs.ntws_latest }}
+            - IBKR Desktop Beta: ${{ steps.versions.outputs.ntws_beta }}
+
+      - name: Enable auto-merge
+        if: steps.cpr.outputs.pull-request-operation == 'created' || steps.cpr.outputs.pull-request-operation == 'updated'
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
+        run: gh pr merge ${{ steps.cpr.outputs.pull-request-number }} --auto --squash
