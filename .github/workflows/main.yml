@@ -59,7 +59,7 @@ jobs:
     name: "Audit casks"
     needs: detect_casks
     if: ${{ needs.detect_casks.outputs.casks != '[]' && needs.detect_casks.outputs.casks != '' }}
-    runs-on: macos-15
+    runs-on: macos-14
     steps:
       - name: Set up Homebrew
         id: set-up-homebrew
@@ -82,7 +82,7 @@ jobs:
       - name: Style check cask
         run: brew style --casks ${{ join(fromJson(needs.detect_casks.outputs.casks), ' ') }}
       - name: Audit cask
-        run: brew audit --casks --online --strict ${{ join(fromJson(needs.detect_casks.outputs.casks), ' ') }}
+        run: brew audit --casks --online --strict --skip-style ${{ join(fromJson(needs.detect_casks.outputs.casks), ' ') }}
 
   test_casks:
     name: "${{ matrix.os }}: Test ${{ matrix.cask }}"
