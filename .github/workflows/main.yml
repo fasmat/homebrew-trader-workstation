@@ -96,9 +96,9 @@ jobs:
       matrix:
         cask: ${{ fromJson(needs.detect_casks.outputs.casks) }}
         os:
-          - macos-13
           - macos-14
           - macos-15
+          - macos-26
     steps:
       - name: Set up Homebrew
         id: set-up-homebrew
