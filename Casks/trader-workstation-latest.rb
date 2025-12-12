@@ -5,7 +5,7 @@ cask "trader-workstation-latest" do
   arch arm: "arm", intel: "x64"
   os = on_arch_conditional arm: "macos", intel: "macosx"
 
-  version "10.41.1e"
+  version "10.42.1a"
   sha256 :no_check
 
   url "https://download2.interactivebrokers.com/installers/tws/latest-standalone/tws-latest-standalone-#{os}-#{arch}.dmg"
