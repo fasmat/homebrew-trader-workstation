@@ -5,7 +5,7 @@ cask "ibkr-desktop-beta" do
   arch arm: "arm", intel: "x64"
   os = on_arch_conditional arm: "macos", intel: "macosx"
 
-  version "2.0c"
+  version "2.0e"
   sha256 :no_check
 
   url "https://download2.interactivebrokers.com/installers/ntws/beta-standalone/ntws-beta-standalone-#{os}-#{arch}.dmg"
@@ -32,11 +32,10 @@ cask "ibkr-desktop-beta" do
     ohai "No running instances of IBKR Desktop found"
   end
 
-  uninstall quit:   "com.install4j.5889-6375-8446-2021",
-            script: {
-              executable: "#{appdir}/IBKR Desktop/IBKR Desktop Uninstaller.app/Contents/MacOS/JavaApplicationStub",
-              args:       ["-q"],
-            }
+  uninstall script: {
+    executable: "#{appdir}/IBKR Desktop/IBKR Desktop Uninstaller.app/Contents/MacOS/JavaApplicationStub",
+    args:       ["-q"],
+  }
 
   zap trash: [
     "#{appdir}/IBKR Desktop",

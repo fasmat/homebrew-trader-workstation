@@ -5,7 +5,7 @@ cask "trader-workstation-beta" do
   arch arm: "arm", intel: "x64"
   os = on_arch_conditional arm: "macos", intel: "macosx"
 
-  version "10.44.0c"
+  version "10.44.1a"
   sha256 :no_check
 
   url "https://download2.interactivebrokers.com/installers/tws/beta/tws-beta-#{os}-#{arch}.dmg"
@@ -33,11 +33,10 @@ cask "trader-workstation-beta" do
     ohai "No running instances of Trader Workstation found"
   end
 
-  uninstall quit:   "com.install4j.5889-6375-8446-2021",
-            script: {
-              executable: "#{appdir}/Trader Workstation/Trader Workstation Uninstaller.app/Contents/MacOS/JavaApplicationStub",
-              args:       ["-q"],
-            }
+  uninstall script: {
+    executable: "#{appdir}/Trader Workstation/Trader Workstation Uninstaller.app/Contents/MacOS/JavaApplicationStub",
+    args:       ["-q"],
+  }
 
   zap trash: [
     "#{appdir}/Trader Workstation",
