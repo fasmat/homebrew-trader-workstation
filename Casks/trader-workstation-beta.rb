@@ -33,8 +33,7 @@ cask "trader-workstation-beta" do
     ohai "No running instances of Trader Workstation found"
   end
 
-  uninstall quit:   "com.install4j.5889-6375-8446-2021",
-            script: {
+  uninstall script: {
               executable: "#{appdir}/Trader Workstation/Trader Workstation Uninstaller.app/Contents/MacOS/JavaApplicationStub",
               args:       ["-q"],
             }

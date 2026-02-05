@@ -32,8 +32,7 @@ cask "ibkr-desktop-beta" do
     ohai "No running instances of IBKR Desktop found"
   end
 
-  uninstall quit:   "com.install4j.5889-6375-8446-2021",
-            script: {
+  uninstall script: {
               executable: "#{appdir}/IBKR Desktop/IBKR Desktop Uninstaller.app/Contents/MacOS/JavaApplicationStub",
               args:       ["-q"],
             }
