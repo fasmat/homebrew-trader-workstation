@@ -33,9 +33,9 @@ cask "trader-workstation-latest" do
   end
 
   uninstall script: {
-              executable: "#{appdir}/Trader Workstation #{version.major_minor}/Trader Workstation #{version.major_minor} Uninstaller.app/Contents/MacOS/JavaApplicationStub",
-              args:       ["-q"],
-            }
+    executable: "#{appdir}/Trader Workstation #{version.major_minor}/Trader Workstation #{version.major_minor} Uninstaller.app/Contents/MacOS/JavaApplicationStub",
+    args:       ["-q"],
+  }
 
   zap trash: [
     "#{appdir}/Trader Workstation #{version.major_minor}",

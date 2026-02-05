@@ -33,9 +33,9 @@ cask "ibkr-desktop-beta" do
   end
 
   uninstall script: {
-              executable: "#{appdir}/IBKR Desktop/IBKR Desktop Uninstaller.app/Contents/MacOS/JavaApplicationStub",
-              args:       ["-q"],
-            }
+    executable: "#{appdir}/IBKR Desktop/IBKR Desktop Uninstaller.app/Contents/MacOS/JavaApplicationStub",
+    args:       ["-q"],
+  }
 
   zap trash: [
     "#{appdir}/IBKR Desktop",
