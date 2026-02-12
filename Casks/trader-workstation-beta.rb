@@ -5,7 +5,7 @@ cask "trader-workstation-beta" do
   arch arm: "arm", intel: "x64"
   os = on_arch_conditional arm: "macos", intel: "macosx"
 
-  version "10.44.1c"
+  version "10.44.1d"
   sha256 :no_check
 
   url "https://download2.interactivebrokers.com/installers/tws/beta/tws-beta-#{os}-#{arch}.dmg"
