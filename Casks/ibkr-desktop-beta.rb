@@ -24,9 +24,8 @@ cask "ibkr-desktop-beta" do
     end
   end
 
-  depends_on :macos
-
   conflicts_with cask: ["ibkr", "ibkr-desktop-latest"]
+  depends_on :macos
 
   installer script: {
     executable: "#{staged_path}/IBKR Desktop Installer.app/Contents/MacOS/JavaApplicationStub",
