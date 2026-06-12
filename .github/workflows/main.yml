@@ -78,6 +78,8 @@ jobs:
         id: gems
         run: brew install-bundler-gems
         if: steps.cache.outputs.cache-hit != 'true'
+      - name: Trust fasmat/trader-workstation tap
+        run: brew trust fasmat/trader-workstation
       - name: Style check cask
         run: brew style --casks ${{ join(fromJson(needs.detect_casks.outputs.casks), ' ') }}
       - name: Audit cask
@@ -116,7 +118,8 @@ jobs:
         id: gems
         run: brew install-bundler-gems
         if: steps.cache.outputs.cache-hit != 'true'
-
+      - name: Trust fasmat/trader-workstation tap
+        run: brew trust fasmat/trader-workstation
       - name: Install cask
         run: brew install --cask "${{ matrix.cask }}"
       - name: Uninstall cask
