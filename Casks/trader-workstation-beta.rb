@@ -39,8 +39,8 @@ cask "trader-workstation-beta" do
   }
 
   zap trash: [
-    "~/Applications/Trader Workstation",
-    "/Applications/Trader Workstation",
+    "/Applications/Trader Workstation",  
+    "~/Applications/Trader Workstation",  
     "~/Jts",
     "~/Library/Application Support/Trader Workstation",
   ]
