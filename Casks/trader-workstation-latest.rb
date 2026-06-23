@@ -5,7 +5,7 @@ cask "trader-workstation-latest" do
   arch arm: "arm", intel: "x64"
   os = on_arch_conditional arm: "macos", intel: "macosx"
 
-  version "10.47.1e"
+  version "10.48.1b"
   sha256 :no_check
 
   url "https://download2.interactivebrokers.com/installers/tws/latest-standalone/tws-latest-standalone-#{os}-#{arch}.dmg"
@@ -33,12 +33,13 @@ cask "trader-workstation-latest" do
   end
 
   uninstall script: {
-    executable: "#{appdir}/Trader Workstation #{version.major_minor}/Trader Workstation #{version.major_minor} Uninstaller.app/Contents/MacOS/JavaApplicationStub",
+    executable: "~/Applications/Trader Workstation #{version.major_minor}/Trader Workstation #{version.major_minor} Uninstaller.app/Contents/MacOS/JavaApplicationStub",
     args:       ["-q"],
   }
 
   zap trash: [
-    "#{appdir}/Trader Workstation #{version.major_minor}",
+    "/Applications/Trader Workstation #{version.major_minor}",
+    "~/Applications/Trader Workstation #{version.major_minor}",
     "~/Jts",
     "~/Library/Application Support/Trader Workstation #{version.major_minor}",
   ]
