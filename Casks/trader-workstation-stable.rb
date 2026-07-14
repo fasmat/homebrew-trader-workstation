@@ -27,7 +27,7 @@ cask "trader-workstation-stable" do
 
   uninstall_preflight do
     ohai "Stopping all running instances of Trader Workstation prior to uninstall"
-    system_command "/usr/bin/pkill", args: ["-f", "#{appdir}/Trader Workstation #{version.major_minor}/Trader Workstation.app"]
+    system_command "/usr/bin/pkill", args: ["-f", "Trader Workstation #{version.major_minor}.app"]
   rescue RuntimeError
     ohai "No running instances of Trader Workstation found"
   end
@@ -38,7 +38,8 @@ cask "trader-workstation-stable" do
   }
 
   zap trash: [
-    "#{appdir}/Trader Workstation #{version.major_minor}",
+    "/Applications/Trader Workstation #{version.major_minor}",
+    "~/Applications/Trader Workstation #{version.major_minor}",
     "~/Jts",
     "~/Library/Application Support/Trader Workstation #{version.major_minor}",
   ]
