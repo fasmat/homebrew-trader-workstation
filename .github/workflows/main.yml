@@ -122,8 +122,58 @@ jobs:
         run: brew trust fasmat/trader-workstation
       - name: Install cask
         run: brew install --cask "${{ matrix.cask }}"
+      - name: Start Trader Workstation
+        if: startsWith(matrix.cask, 'trader-workstation')
+        run: |
+          # Find application
+          app_path=$(find /Applications -name "Trader Workstation *.app" -type d -maxdepth 3)
+          if [[ -z "$app_path" ]]; then
+            app_path=$(find ~/Applications -name "Trader Workstation *.app" -type d -maxdepth 3)
+          fi
+          if [[ -z "$app_path" ]]; then
+            echo "Trader Workstation application not found."
+            exit 1
+          fi
+
+          # Start Trader Workstation in the background
+          open -a "$app_path"
+          # Wait for a few seconds to allow the application to start
+          sleep 10
+      - name: Start IBKR Desktop
+        if: startsWith(matrix.cask, 'ibkr-desktop')
+        run: |
+          # Find application
+          app_path=$(find /Applications -name "IBKR *.app" -type d -maxdepth 2)
+          if [[ -z "$app_path" ]]; then
+            app_path=$(find ~/Applications -name "IBKR *.app" -type d -maxdepth 2)
+          fi
+          if [[ -z "$app_path" ]]; then
+            echo "IBKR Desktop application not found."
+            exit 1
+          fi
+
+          # Start IBKR Desktop in the background
+          open -a "$app_path"
+          # Wait for a few seconds to allow the application to start
+          sleep 10
       - name: Uninstall cask
         run: brew uninstall --cask "${{ matrix.cask }}"
+      - name: Verify uninstallation Trader Workstation
+        if: startsWith(matrix.cask, 'trader-workstation')
+        run: |
+          # Check if the application is still running
+          if pgrep -f "Trader Workstation" > /dev/null; then
+            echo "Trader Workstation is still running after uninstallation."
+            exit 1
+          fi
+      - name: Verify uninstallation IBKR Desktop
+        if: startsWith(matrix.cask, 'ibkr-desktop')
+        run: |
+          # Check if the application is still running
+          if pgrep -f "IBKR" > /dev/null; then
+            echo "IBKR Desktop is still running after uninstallation."
+            exit 1
+          fi
 
   ci-status:
     name: CI Status

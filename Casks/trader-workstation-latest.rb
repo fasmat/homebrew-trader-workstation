@@ -27,15 +27,16 @@ cask "trader-workstation-latest" do
 
   uninstall_preflight do
     ohai "Stopping all running instances of Trader Workstation prior to uninstall"
-    system_command "/usr/bin/pkill", args: ["-f", "#{appdir}/Trader Workstation #{version.major_minor}/Trader Workstation.app"]
+    system_command "/usr/bin/pkill", args: ["-f", "#{appdir}/Trader Workstation #{version.major_minor}/Trader Workstation #{version.major_minor}.app"]
   rescue RuntimeError
     ohai "No running instances of Trader Workstation found"
   end
 
-  uninstall script: {
-    executable: "~/Applications/Trader Workstation #{version.major_minor}/Trader Workstation #{version.major_minor} Uninstaller.app/Contents/MacOS/JavaApplicationStub",
-    args:       ["-q"],
-  }
+  uninstall quit:   "com.install4j.5889-6375-8446-2021",
+            script: {
+              executable: "#{appdir}/Trader Workstation #{version.major_minor}/Trader Workstation #{version.major_minor} Uninstaller.app/Contents/MacOS/JavaApplicationStub",
+              args:       ["-q"],
+            }
 
   zap trash: [
     "/Applications/Trader Workstation #{version.major_minor}",
