@@ -136,9 +136,10 @@ jobs:
           fi
 
           # Start Trader Workstation in the background
-          open -a "$app_path"
-          # Wait for a few seconds to allow the application to start
+          open "$app_path"
+          # Wait for a few seconds to allow the application to start, then verify it's running
           sleep 10
+          pgrep -f "Trader Workstation" > /dev/null || { echo "Trader Workstation did not start."; exit 1; }
       - name: Start IBKR Desktop
         if: startsWith(matrix.cask, 'ibkr-desktop')
         run: |
