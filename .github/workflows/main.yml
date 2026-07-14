@@ -154,9 +154,10 @@ jobs:
           fi
 
           # Start IBKR Desktop in the background
-          open -a "$app_path"
-          # Wait for a few seconds to allow the application to start
+          open "$app_path"
+          # Wait for a few seconds to allow the application to start, then verify it's running
           sleep 10
+          pgrep -f "IBKR" > /dev/null || { echo "IBKR Desktop did not start."; exit 1; }
       - name: Uninstall cask
         run: brew uninstall --cask "${{ matrix.cask }}"
       - name: Verify uninstallation Trader Workstation
