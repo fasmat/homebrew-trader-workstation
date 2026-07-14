@@ -30,7 +30,7 @@ cask "trader-workstation-latest" do
               ["TERM", "Trader Workstation #{version.major_minor}.app"],
             ],
             script: {
-              executable: "#{appdir}/Trader Workstation #{version.major_minor}/Trader Workstation #{version.major_minor} Uninstaller.app/Contents/MacOS/JavaApplicationStub",
+              executable: "~/Applications/Trader Workstation #{version.major_minor}/Trader Workstation #{version.major_minor} Uninstaller.app/Contents/MacOS/JavaApplicationStub",
               args:       ["-q"],
             }
 

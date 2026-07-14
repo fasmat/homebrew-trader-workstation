@@ -31,7 +31,7 @@ cask "trader-workstation-beta" do
               ["TERM", "Trader Workstation.app"],
             ],
             script: {
-              executable: "#{appdir}/Trader Workstation/Trader Workstation Uninstaller.app/Contents/MacOS/JavaApplicationStub",
+              executable: "~/Applications/Trader Workstation/Trader Workstation Uninstaller.app/Contents/MacOS/JavaApplicationStub",
               args:       ["-q"],
             }
 

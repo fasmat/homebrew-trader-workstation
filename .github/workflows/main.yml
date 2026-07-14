@@ -136,6 +136,7 @@ jobs:
           fi
 
           # Start Trader Workstation in the background
+          echo "Starting Trader Workstation from $app_path"
           open "$app_path"
           # Wait for a few seconds to allow the application to start, then verify it's running
           sleep 10
@@ -154,6 +155,7 @@ jobs:
           fi
 
           # Start IBKR Desktop in the background
+          echo "Starting IBKR Desktop from $app_path"
           open "$app_path"
           # Wait for a few seconds to allow the application to start, then verify it's running
           sleep 10
