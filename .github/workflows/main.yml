@@ -63,7 +63,7 @@ jobs:
     steps:
       - name: Set up Homebrew
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@9af03b7ae3f9e2ae5c174f659d5c3909f7e7dbac # main
+        uses: Homebrew/actions/setup-homebrew@5037c6f1012cc5ea0b9f03fedbaf9955ed9e51e0 # main
         with:
           stable: true
           test-bot: false
@@ -103,7 +103,7 @@ jobs:
     steps:
       - name: Set up Homebrew
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@9af03b7ae3f9e2ae5c174f659d5c3909f7e7dbac # main
+        uses: Homebrew/actions/setup-homebrew@5037c6f1012cc5ea0b9f03fedbaf9955ed9e51e0 # main
         with:
           stable: true
           test-bot: false
