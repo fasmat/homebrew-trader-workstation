@@ -36,6 +36,7 @@ cask "trader-workstation-latest" do
     # avoids install4j raising a HeadlessException when it tries to move a flagged "protected" file to the Trash
     ohai "Clearing extended attributes prior to uninstall"
     ["/Applications/Trader Workstation #{version.major_minor}", "~/Applications/Trader Workstation #{version.major_minor}"].each do |dir|
+      dir = File.expand_path(dir)
       system_command "/usr/bin/xattr", args: ["-cr", dir] if File.directory?(dir)
     end
   end
