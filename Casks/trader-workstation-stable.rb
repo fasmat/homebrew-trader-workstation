@@ -27,9 +27,18 @@ cask "trader-workstation-stable" do
 
   uninstall_preflight do
     ohai "Stopping all running instances of Trader Workstation prior to uninstall"
-    system_command "/usr/bin/pkill", args: ["-f", "Trader Workstation #{version.major_minor}.app"]
-  rescue RuntimeError
-    ohai "No running instances of Trader Workstation found"
+    begin
+      system_command "/usr/bin/pkill", args: ["-f", "Trader Workstation #{version.major_minor}.app"]
+    rescue RuntimeError
+      ohai "No running instances of Trader Workstation found"
+    end
+
+    # avoids install4j raising a HeadlessException when it tries to move a flagged "protected" file to the Trash
+    ohai "Clearing extended attributes prior to uninstall"
+    ["/Applications/Trader Workstation #{version.major_minor}", "~/Applications/Trader Workstation #{version.major_minor}"].each do |dir|
+      dir = File.expand_path(dir)
+      system_command "/usr/bin/xattr", args: ["-cr", dir], must_succeed: false if File.directory?(dir)
+    end
   end
 
   uninstall script: {
