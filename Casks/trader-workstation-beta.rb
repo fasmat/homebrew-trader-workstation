@@ -32,6 +32,13 @@ cask "trader-workstation-beta" do
   rescue RuntimeError
     ohai "No running instances of Trader Workstation found"
   end
+  uninstall_preflight do
+    # avoids install4j raising a HeadlessException when it tries to move a flagged "protected" file to the Trash
+    ohai "Clearing extended attributes prior to uninstall"
+    ["/Applications/Trader Workstation", "~/Applications/Trader Workstation"].each do |dir|
+      system_command "/usr/bin/xattr", args: ["-cr", dir] if File.directory?(dir)
+    end
+  end
 
   uninstall script: {
     executable: "~/Applications/Trader Workstation/Trader Workstation Uninstaller.app/Contents/MacOS/JavaApplicationStub",
