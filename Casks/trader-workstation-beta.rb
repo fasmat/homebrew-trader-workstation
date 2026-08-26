@@ -38,7 +38,7 @@ cask "trader-workstation-beta" do
     ohai "Clearing extended attributes prior to uninstall"
     ["/Applications/Trader Workstation", "~/Applications/Trader Workstation"].each do |dir|
       dir = File.expand_path(dir)
-      system_command "/usr/bin/xattr", args: ["-cr", dir] if File.directory?(dir)
+      system_command "/usr/bin/xattr", args: ["-cr", dir], must_succeed: false if File.directory?(dir)
     end
   end
 
