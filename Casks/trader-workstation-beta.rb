@@ -27,9 +27,9 @@ cask "trader-workstation-beta" do
   }
 
   uninstall_preflight_steps do
-    terminate_process "Trader Workstation",
-                     notices:         ["Stopping all running instances of Trader Workstation prior to uninstall"],
-                     failure_message: "Failed to stop instances of Trader Workstation"
+    terminate_process "Trader Workstation.app",
+                      notices:         ["Stopping all running instances of Trader Workstation prior to uninstall"],
+                      failure_message: "Failed to stop instances of Trader Workstation"
 
     # avoids install4j raising a HeadlessException when it tries to move a flagged "protected" file to the Trash
     if_path_exists "/Applications/Trader Workstation" do
