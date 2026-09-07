@@ -26,7 +26,7 @@ cask "trader-workstation-beta" do
     args:       ["-q"],
   }
 
-  uninstall_preflight do
+  uninstall_preflight_steps do
     ohai "Stopping all running instances of Trader Workstation prior to uninstall"
     begin
       system_command "/usr/bin/pkill", args: ["-f", "Trader Workstation.app"]
