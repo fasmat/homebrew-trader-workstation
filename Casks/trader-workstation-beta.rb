@@ -27,7 +27,7 @@ cask "trader-workstation-beta" do
   }
 
   uninstall_preflight_steps do
-    terminate_process "~/Applications/Trader Workstation/Trader Workstation.app",
+    terminate_process "{{appdir}}/Trader Workstation/Trader Workstation.app",
                       match: :full, must_succeed: false,
                       notices: ["Stopping all running instances of Trader Workstation prior to uninstall"],
                       failure_message: "No running instances of Trader Workstation found"

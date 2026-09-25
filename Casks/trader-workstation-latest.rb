@@ -26,7 +26,7 @@ cask "trader-workstation-latest" do
   }
 
   uninstall_preflight_steps do
-    terminate_process "~/Applications/Trader Workstation #{version.major_minor}/Trader Workstation #{version.major_minor}.app",
+    terminate_process "{{appdir}}/Trader Workstation #{version.major_minor}/Trader Workstation #{version.major_minor}.app",
                       match: :full, must_succeed: false,
                       notices: ["Stopping all running instances of Trader Workstation prior to uninstall"],
                       failure_message: "No running instances of Trader Workstation found"
