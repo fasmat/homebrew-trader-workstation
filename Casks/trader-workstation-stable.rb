@@ -26,23 +26,19 @@ cask "trader-workstation-stable" do
   }
 
   uninstall_preflight_steps do
-    terminate_process "{{appdir}}/Trader Workstation #{version.major_minor}/Trader Workstation #{version.major_minor}.app",
+    terminate_process "~/Applications/Trader Workstation #{version.major_minor}/Trader Workstation #{version.major_minor}.app",
                       match: :full, must_succeed: false,
                       notices: ["Stopping all running instances of Trader Workstation prior to uninstall"],
                       failure_message: "No running instances of Trader Workstation found"
 
     # avoids install4j raising a HeadlessException when it tries to move a flagged "protected" file to the Trash
-    if_path_exists "/Applications/Trader Workstation #{version.major_minor}" do
-      run "/usr/bin/xattr", args: ["-cr", "/Applications/Trader Workstation #{version.major_minor}"], must_succeed: false
-    end
-
     if_path_exists "~/Applications/Trader Workstation #{version.major_minor}" do
       run "/usr/bin/xattr", args: ["-cr", "~/Applications/Trader Workstation #{version.major_minor}"], must_succeed: false
     end
   end
 
   uninstall script: {
-    executable: "#{appdir}/Trader Workstation #{version.major_minor}/Trader Workstation #{version.major_minor} Uninstaller.app/Contents/MacOS/JavaApplicationStub",
+    executable: "~/Applications/Trader Workstation #{version.major_minor}/Trader Workstation #{version.major_minor} Uninstaller.app/Contents/MacOS/JavaApplicationStub",
     args:       ["-q"],
   }
 
