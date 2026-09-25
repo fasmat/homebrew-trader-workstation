@@ -32,10 +32,6 @@ cask "trader-workstation-latest" do
                       failure_message: "No running instances of Trader Workstation found"
 
     # avoids install4j raising a HeadlessException when it tries to move a flagged "protected" file to the Trash
-    if_path_exists "/Applications/Trader Workstation #{version.major_minor}" do
-      run "/usr/bin/xattr", args: ["-cr", "/Applications/Trader Workstation #{version.major_minor}"], must_succeed: false
-    end
-
     if_path_exists "~/Applications/Trader Workstation #{version.major_minor}" do
       run "/usr/bin/xattr", args: ["-cr", "~/Applications/Trader Workstation #{version.major_minor}"], must_succeed: false
     end

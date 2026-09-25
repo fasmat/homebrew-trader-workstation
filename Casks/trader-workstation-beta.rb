@@ -5,7 +5,7 @@ cask "trader-workstation-beta" do
   arch arm: "arm", intel: "x64"
   os = on_arch_conditional arm: "macos", intel: "macosx"
 
-  version "10.52.0b"
+  version "10.52.0c"
   sha256 :no_check
 
   url "https://download2.interactivebrokers.com/installers/tws/beta/tws-beta-#{os}-#{arch}.dmg"
@@ -33,10 +33,6 @@ cask "trader-workstation-beta" do
                       failure_message: "No running instances of Trader Workstation found"
 
     # avoids install4j raising a HeadlessException when it tries to move a flagged "protected" file to the Trash
-    if_path_exists "/Applications/Trader Workstation" do
-      run "/usr/bin/xattr", args: ["-cr", "/Applications/Trader Workstation"], must_succeed: false
-    end
-
     if_path_exists "~/Applications/Trader Workstation" do
       run "/usr/bin/xattr", args: ["-cr", "~/Applications/Trader Workstation"], must_succeed: false
     end

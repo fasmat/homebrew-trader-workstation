@@ -5,7 +5,7 @@ cask "trader-workstation-stable" do
   arch arm: "arm", intel: "x64"
   os = on_arch_conditional arm: "macos", intel: "macosx"
 
-  version "10.45.1j"
+  version "10.50.1e"
   sha256 :no_check
 
   url "https://download2.interactivebrokers.com/installers/tws/stable-standalone/tws-stable-standalone-#{os}-#{arch}.dmg"
@@ -32,17 +32,13 @@ cask "trader-workstation-stable" do
                       failure_message: "No running instances of Trader Workstation found"
 
     # avoids install4j raising a HeadlessException when it tries to move a flagged "protected" file to the Trash
-    if_path_exists "/Applications/Trader Workstation #{version.major_minor}" do
-      run "/usr/bin/xattr", args: ["-cr", "/Applications/Trader Workstation #{version.major_minor}"], must_succeed: false
-    end
-
     if_path_exists "~/Applications/Trader Workstation #{version.major_minor}" do
       run "/usr/bin/xattr", args: ["-cr", "~/Applications/Trader Workstation #{version.major_minor}"], must_succeed: false
     end
   end
 
   uninstall script: {
-    executable: "#{appdir}/Trader Workstation #{version.major_minor}/Trader Workstation #{version.major_minor} Uninstaller.app/Contents/MacOS/JavaApplicationStub",
+    executable: "~/Applications/Trader Workstation #{version.major_minor}/Trader Workstation #{version.major_minor} Uninstaller.app/Contents/MacOS/JavaApplicationStub",
     args:       ["-q"],
   }
 
