@@ -4,7 +4,7 @@
 cask "ibkr-desktop-beta" do
   arch arm: "-arm", intel: "x-x64"
 
-  version "4.0a"
+  version "4.0b"
   sha256 :no_check
 
   url "https://download2.interactivebrokers.com/installers/ntws/beta-standalone/ntws-beta-standalone-macos#{arch}.dmg"
